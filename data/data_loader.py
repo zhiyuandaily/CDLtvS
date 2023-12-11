@@ -58,7 +58,7 @@ class Custormer_Data():
 
     def __read_data__(self):
         # 0. 筛选城市
-        trader_code_city_pd=pd.read_pickle('/home/zhouzhiyuan17/商家价值/RAWDATA/pop_pd_by_cdm_cust_ldop_trader_da.pkl')
+        trader_code_city_pd=pd.read_pickle('/home/zzy17/商家价值/RAWDATA/pop_pd_by_cdm_cust_ldop_trader_da.pkl')
         if self.args.data_info=='GuangZhou':
             trader_code_city_pd=trader_code_city_pd[trader_code_city_pd['sign_city_id']==1601]
         elif self.args.data_info=='BeiJing':
@@ -69,11 +69,11 @@ class Custormer_Data():
         data2=pd.DataFrame()
         data2_plus=pd.DataFrame()
         for i in range(self.args.data_volume):
-            temp_df = pd.read_pickle('/home/zhouzhiyuan17/商家价值/DATASET/trader_waybill_pd/trader_waybill_pd_'+str(i)+'.pkl')[['trader_code','waybill_num','waybill_weight','start_date']]
+            temp_df = pd.read_pickle('/home/zzy17/商家价值/DATASET/trader_waybill_pd/trader_waybill_pd_'+str(i)+'.pkl')[['trader_code','waybill_num','waybill_weight','start_date']]
             data1 =data1.append(temp_df[temp_df['trader_code'].isin(trader_code_city_pd)])
-            temp_df = pd.read_pickle('/home/zhouzhiyuan17/商家价值/DATASET/trader_order_num_pd/trader_order_num_pd_'+str(i)+'.pkl')[['trader_code','sale_ord_num','sale_qtty','start_date']]
+            temp_df = pd.read_pickle('/home/zzy17/商家价值/DATASET/trader_order_num_pd/trader_order_num_pd_'+str(i)+'.pkl')[['trader_code','sale_ord_num','sale_qtty','start_date']]
             data2 =data2.append(temp_df[temp_df['trader_code'].isin(trader_code_city_pd)])
-            temp_df = pd.read_pickle('/home/zhouzhiyuan17/商家价值/DATASET/trader_order_item_pd/trader_order_item_pd_'+str(i)+'.pkl')[['trader_code','item_third_cate_cd','sale_ord_num','sale_qtty','start_date']]
+            temp_df = pd.read_pickle('/home/zzy17/商家价值/DATASET/trader_order_item_pd/trader_order_item_pd_'+str(i)+'.pkl')[['trader_code','item_third_cate_cd','sale_ord_num','sale_qtty','start_date']]
             data2_plus =data2_plus.append(temp_df[temp_df['trader_code'].isin(trader_code_city_pd)])
         data1.columns = ['cusid','num','num2','date']
         data2.columns = ['cusid','num','num2','date']
@@ -98,7 +98,7 @@ class Custormer_Data():
         data2_plus = pd.merge(data2_plus, customer_id, on=['cusid'], how='inner')
         data1 = data1[['customer_id','date','num','num2']]
         data2 = data2[['customer_id','date','num','num2']]
-        item_third_cate_id=np.load('/home/zhouzhiyuan17/商家价值/MODEL/CLVP2023-main/ITEM_ENCODER/results/item_third_cate_id.npy',allow_pickle=True)
+        item_third_cate_id=np.load('/home/zzy17/商家价值/MODEL/CLVP2023-main/ITEM_ENCODER/results/item_third_cate_id.npy',allow_pickle=True)
         item_third_cate_id=pd.DataFrame(item_third_cate_id)
         item_third_cate_id.columns=['item_third_cate_cd','item_third_cate_id']
         data2_plus=pd.merge(data2_plus, item_third_cate_id, on=['item_third_cate_cd'], how='inner')
@@ -107,8 +107,8 @@ class Custormer_Data():
         self.args.item_seq_l=(self.args.item_seq_l+1)*30+1
 
         # 2. 客户画像特征读取
-        portrait1=pd.read_pickle('/home/zhouzhiyuan17/商家价值/DATASET/waybill_customer_portrait.pkl')
-        portrait2=pd.read_pickle('/home/zhouzhiyuan17/商家价值/DATASET/order_customer_portrait.pkl')
+        portrait1=pd.read_pickle('/home/zzy17/商家价值/DATASET/waybill_customer_portrait.pkl')
+        portrait2=pd.read_pickle('/home/zzy17/商家价值/DATASET/order_customer_portrait.pkl')
         portrait1_dense_features = [f for f in portrait1.columns.tolist() if f[0] == "I"]
         portrait1_sparse_features = [f for f in portrait1.columns.tolist() if f[0] == "C"]
         portrait2_dense_features = [f for f in portrait2.columns.tolist() if f[0] == "I"]
